@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog INF222 — Pascal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --card: #1c1c1c;
+      --border: #2a2a2a;
+      --accent: #e8c547;
+      --accent2: #e87547;
+      --text: #f0ede6;
+      --muted: #888;
+      --success: #4caf82;
+      --error: #e05252;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(14,14,14,0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--text); }
+
+    nav { display: flex; gap: 0.5rem; align-items: center; }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 500;
+    }
+
+    .nav-btn.primary:hover { background: #d4b03e; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: end;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--text);
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .search-bar input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus { border-color: var(--accent); }
+    .search-bar input::placeholder { color: var(--muted); }
+
+    .search-bar button {
+      background: var(--accent);
+      border: none;
+      color: #000;
+      padding: 0.75rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .search-bar button:hover { background: #d4b03e; }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2.5rem;
+    }
+
+    /* ── ARTICLES ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .articles-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+
+    .article-card {
+      background: var(--card);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .article-card:hover { background: #222; }
+
+    .article-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transition: transform 0.2s;
+      transform-origin: bottom;
+    }
+
+    .article-card:hover::before { transform: scaleY(1); }
+
+    .card-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(232,197,71,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(232,197,71,0.25);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .tag.orange {
+      background: rgba(232,117,71,0.12);
+      color: var(--accent2);
+      border-color: rgba(232,117,71,0.25);
+    }
+
+    .meta-date {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-excerpt {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-author {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .card-author strong { color: var(--text); }
+
+    .card-actions { display: flex; gap: 0.5rem; }
+
+    .btn-sm {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.3rem 0.7rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-sm:hover { border-color: var(--error); color: var(--error); }
+    .btn-sm.edit:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .panel h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      color: var(--text);
+    }
+
+    .form-group { margin-bottom: 1rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 0.85rem;
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--accent); }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #555; }
+
+    .form-group select option { background: var(--card); }
+
+    .btn-full {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      padding: 0.75rem;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-full:hover { background: #d4b03e; }
+    .btn-full.danger { background: var(--error); color: #fff; }
+    .btn-full.danger:hover { background: #c44; }
+
+    /* ── AUTH PANEL ── */
+    .auth-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .auth-tab {
+      flex: 1;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 500;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 0.85rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 320px;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); color: #fff; }
+    .toast.error { background: var(--error); color: #fff; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--card);
+      border-radius: 12px;
+      color: var(--muted);
+    }
+
+    .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty p { font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── LOADING ── */
+    .loading {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-8px); opacity: 1; }
+    }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── USER BADGE ── */
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .avatar {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #000;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 0.85rem; font-weight: 500; truncate: ellipsis; white-space: nowrap; overflow: hidden; }
+    .user-role { font-size: 0.72rem; color: var(--accent); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover { border-color: var(--error); color: var(--error); }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .main { grid-template-columns: 1fr; }
+      .sidebar { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">Blog<span>INF222</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="showSection('articles')">Articles</button>
+      <button class="nav-btn" onclick="showSection('nouveau')" id="btn-nouveau" style="display:none">+ Nouveau</button>
+      <button class="nav-btn primary" onclick="openModal('auth-modal')" id="btn-login">Connexion</button>
+      <button class="nav-btn" onclick="logout()" id="btn-logout" style="display:none">Déconnexion</button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <h1 class="hero-title">Le Blog<br><em>Technique</em><br>INF 222</h1>
+    <p class="hero-sub">API REST · Flask · MySQL · JWT<br>Université de Yaoundé I — L2 Informatique</p>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Rechercher un article..." onkeydown="if(event.key==='Enter') searchArticles()">
+    <button onclick="searchArticles()">Chercher</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ARTICLES -->
+  <div>
+    <div class="section-label" id="articles-label">Tous les articles</div>
+    <div id="articles-container">
+      <div class="loading">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- AUTH / USER -->
+    <div class="panel" id="auth-panel">
+      <div id="user-section" style="display:none">
+        <div class="user-badge">
+          <div class="avatar" id="user-avatar">P</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name-display">Utilisateur</div>
+            <div class="user-role">✓ Connecté</div>
+          </div>
+        </div>
+        <button class="btn-full" onclick="openModal('new-article-modal')">+ Nouvel article</button>
+      </div>
+      <div id="guest-section">
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem">Connectez-vous pour publier des articles.</p>
+        <button class="btn-full" onclick="openModal('auth-modal')">Se connecter</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="panel">
+      <h3>Statistiques</h3>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">Articles</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-cat">0</div>
+          <div class="stat-label">Catégories</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="panel">
+      <h3>Filtrer</h3>
+      <div class="form-group">
+        <label>Par catégorie</label>
+        <select id="filter-cat" onchange="filterByCategory()">
+          <option value="">Toutes les catégories</option>
+          <option value="Tech">Tech</option>
+          <option value="General">General</option>
+          <option value="Tutoriel">Tutoriel</option>
+          <option value="Actualité">Actualité</option>
+        </select>
+      </div>
+      <button class="btn-full" style="background:var(--surface);border:1px solid var(--border);color:var(--muted)" onclick="loadArticles()">↺ Réinitialiser</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL AUTH -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Authentification</h2>
+      <button class="close-btn" onclick="closeModal('auth-modal')">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
+      <button class="auth-tab" onclick="switchTab('register')">Inscription</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="votre@email.com">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-full" onclick="login()">Se connecter</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Nom complet</label>
+        <input type="text" id="reg-nom" placeholder="Votre nom">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="votre@email.com">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="reg-password" placeholder="••••••••">
+      </div>
+      <button class="btn-full" onclick="register()">Créer un compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOUVEL ARTICLE -->
+<div class="modal-overlay" id="new-article-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="article-modal-title">Nouvel article</h2>
+      <button class="close-btn" onclick="closeModal('new-article-modal')">✕</button>
+    </div>
+    <input type="hidden" id="edit-article-id">
+    <div class="form-group">
+      <label>Titre *</label>
+      <input type="text" id="article-titre" placeholder="Titre de l'article">
+    </div>
+    <div class="form-group">
+      <label>Auteur *</label>
+      <input type="text" id="article-auteur" placeholder="Votre nom">
+    </div>
+    <div class="form-group">
+      <label>Catégorie</label>
+      <select id="article-categorie">
+        <option value="General">General</option>
+        <option value="Tech">Tech</option>
+        <option value="Tutoriel">Tutoriel</option>
+        <option value="Actualité">Actualité</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Tags (séparés par des virgules)</label>
+      <input type="text" id="article-tags" placeholder="web, html, css">
+    </div>
+    <div class="form-group">
+      <label>Contenu *</label>
+      <textarea id="article-contenu" rows="5" placeholder="Rédigez votre article..."></textarea>
+    </div>
+    <button class="btn-full" onclick="saveArticle()">Publier l'article</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://127.0.0.1:5000';
+  let token = localStorage.getItem('blog_token');
+  let currentUser = localStorage.getItem('blog_user');
+
+  // ── INIT ──
+  window.onload = () => {
+    updateAuthUI();
+    loadArticles();
+  };
+
+  function updateAuthUI() {
+    const logged = !!token;
+    document.getElementById('btn-login').style.display = logged ? 'none' : 'block';
+    document.getElementById('btn-logout').style.display = logged ? 'block' : 'none';
+    document.getElementById('btn-nouveau').style.display = logged ? 'block' : 'none';
+    document.getElementById('user-section').style.display = logged ? 'block' : 'none';
+    document.getElementById('guest-section').style.display = logged ? 'none' : 'block';
+    if (currentUser) {
+      document.getElementById('user-name-display').textContent = currentUser;
+      document.getElementById('user-avatar').textContent = currentUser[0].toUpperCase();
+    }
+  }
+
+  // ── TOAST ──
+  function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3000);
+  }
+
+  // ── MODALS ──
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  // ── AUTH TABS ──
+  function switchTab(tab) {
+    document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+    document.querySelectorAll('.auth-tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+    });
+  }
+
+  // ── LOGIN ──
+  async function login() {
+    const email = document.getElementById('login-email').value;
+    const pwd = document.getElementById('login-password').value;
+    if (!email || !pwd) return toast('Email et mot de passe requis', 'error');
+    try {
+      const res = await fetch(`${API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, mot_de_passe: pwd })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        token = data.token;
+        currentUser = email.split('@')[0];
+        localStorage.setItem('blog_token', token);
+        localStorage.setItem('blog_user', currentUser);
+        closeModal('auth-modal');
+        updateAuthUI();
+        toast('Connexion réussie ! 🎉');
+      } else {
+        toast(data.message || 'Identifiants incorrects', 'error');
+      }
+    } catch (e) {
+      toast('Impossible de contacter l\'API', 'error');
+    }
+  }
+
+  // ── REGISTER ──
+  async function register() {
+    const nom = document.getElementById('reg-nom').value;
+    const email = document.getElementById('reg-email').value;
+    const pwd = document.getElementById('reg-password').value;
+    if (!nom || !email || !pwd) return toast('Tous les champs sont requis', 'error');
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom, email, mot_de_passe: pwd })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast('Compte créé ! Connectez-vous.');
+        switchTab('login');
+        document.getElementById('login-email').value = email;
+      } else {
+        toast(data.message || 'Erreur inscription', 'error');
+      }
+    } catch (e) {
+      toast('Impossible de contacter l\'API', 'error');
+    }
+  }
+
+  // ── LOGOUT ──
+  function logout() {
+    token = null; currentUser = null;
+    localStorage.removeItem('blog_token');
+    localStorage.removeItem('blog_user');
+    updateAuthUI();
+    toast('Déconnecté');
+  }
+
+  // ── LOAD ARTICLES ──
+  async function loadArticles() {
+    document.getElementById('filter-cat').value = '';
+    document.getElementById('articles-label').textContent = 'Tous les articles';
+    showLoading();
+    try {
+      const res = await fetch(`${API}/api/articles`);
+      const articles = await res.json();
+      renderArticles(articles);
+      updateStats(articles);
+    } catch (e) {
+      showError();
+    }
+  }
+
+  // ── SEARCH ──
+  async function searchArticles() {
+    const q = document.getElementById('search-input').value.trim();
+    if (!q) return loadArticles();
+    document.getElementById('articles-label').textContent = `Résultats pour "${q}"`;
+    showLoading();
+    try {
+      const res = await fetch(`${API}/api/articles/search?query=${encodeURIComponent(q)}`);
+      const articles = await res.json();
+      renderArticles(articles);
+    } catch (e) { showError(); }
+  }
+
+  // ── FILTER ──
+  async function filterByCategory() {
+    const cat = document.getElementById('filter-cat').value;
+    if (!cat) return loadArticles();
+    document.getElementById('articles-label').textContent = `Catégorie : ${cat}`;
+    showLoading();
+    try {
+      const res = await fetch(`${API}/api/articles?categorie=${encodeURIComponent(cat)}`);
+      const articles = await res.json();
+      renderArticles(articles);
+    } catch (e) { showError(); }
+  }
+
+  // ── RENDER ARTICLES ──
+  function renderArticles(articles) {
+    const c = document.getElementById('articles-container');
+    if (!articles.length) {
+      c.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>Aucun article trouvé.<br>Soyez le premier à publier !</p></div>`;
+      return;
+    }
+    c.innerHTML = `<div class="articles-grid">${articles.map(a => `
+      <div class="article-card">
+        <div class="card-meta">
+          <span class="tag">${a.categorie || 'General'}</span>
+          ${a.tags ? a.tags.split(',').slice(0,2).map(t => `<span class="tag orange">${t.trim()}</span>`).join('') : ''}
+          <span class="meta-date">${formatDate(a.date_creation)}</span>
+        </div>
+        <div class="card-title">${escHtml(a.titre)}</div>
+        <div class="card-excerpt">${escHtml(a.contenu)}</div>
+        <div class="card-footer">
+          <div class="card-author">Par <strong>${escHtml(a.auteur || 'Anonyme')}</strong></div>
+          ${token ? `
+          <div class="card-actions">
+            <button class="btn-sm edit" onclick="editArticle(${a.id}, '${escJs(a.titre)}', '${escJs(a.contenu)}', '${escJs(a.auteur||'')}', '${escJs(a.categorie||'')}', '${escJs(a.tags||'')}')">Modifier</button>
+            <button class="btn-sm" onclick="deleteArticle(${a.id})">Supprimer</button>
+          </div>` : ''}
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  // ── SAVE ARTICLE ──
+  async function saveArticle() {
+    const id = document.getElementById('edit-article-id').value;
+    const titre = document.getElementById('article-titre').value;
+    const contenu = document.getElementById('article-contenu').value;
+    const auteur = document.getElementById('article-auteur').value;
+    const categorie = document.getElementById('article-categorie').value;
+    const tags = document.getElementById('article-tags').value;
+    if (!titre || !contenu || !auteur) return toast('Titre, contenu et auteur requis', 'error');
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/api/articles/${id}` : `${API}/api/articles`;
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ titre, contenu, auteur, categorie, tags })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        closeModal('new-article-modal');
+        resetArticleForm();
+        toast(id ? 'Article modifié ✓' : 'Article publié ✓');
+        loadArticles();
+      } else {
+        toast(data.message || 'Erreur', 'error');
+      }
+    } catch (e) { toast('Impossible de contacter l\'API', 'error'); }
+  }
+
+  // ── EDIT ──
+  function editArticle(id, titre, contenu, auteur, categorie, tags) {
+    document.getElementById('edit-article-id').value = id;
+    document.getElementById('article-titre').value = titre;
+    document.getElementById('article-contenu').value = contenu;
+    document.getElementById('article-auteur').value = auteur;
+    document.getElementById('article-categorie').value = categorie || 'General';
+    document.getElementById('article-tags').value = tags;
+    document.getElementById('article-modal-title').textContent = 'Modifier l\'article';
+    openModal('new-article-modal');
+  }
+
+  // ── DELETE ──
+  async function deleteArticle(id) {
+    if (!confirm('Supprimer cet article ?')) return;
+    try {
+      const res = await fetch(`${API}/api/articles/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) { toast('Article supprimé'); loadArticles(); }
+      else toast('Erreur suppression', 'error');
+    } catch (e) { toast('Impossible de contacter l\'API', 'error'); }
+  }
+
+  // ── STATS ──
+  function updateStats(articles) {
+    document.getElementById('stat-total').textContent = articles.length;
+    const cats = new Set(articles.map(a => a.categorie).filter(Boolean));
+    document.getElementById('stat-cat').textContent = cats.size;
+  }
+
+  // ── HELPERS ──
+  function showLoading() {
+    document.getElementById('articles-container').innerHTML = `<div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  }
+
+  function showError() {
+    document.getElementById('articles-container').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Impossible de contacter l'API.<br>Vérifiez que le serveur Flask est lancé.</p></div>`;
+  }
+
+  function resetArticleForm() {
+    document.getElementById('edit-article-id').value = '';
+    document.getElementById('article-titre').value = '';
+    document.getElementById('article-contenu').value = '';
+    document.getElementById('article-auteur').value = '';
+    document.getElementById('article-tags').value = '';
+    document.getElementById('article-modal-title').textContent = 'Nouvel article';
+  }
+
+  function formatDate(d) {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function escJs(s) {
+    return String(s||'').replace(/'/g,"\\'").replace(/\n/g,' ');
+  }
+
+  function showSection(s) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    if (s === 'nouveau') openModal('new-article-modal');
+  }
+</script>
+</body>
+</html>
