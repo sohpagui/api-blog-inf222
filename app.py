@@ -7,10 +7,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # Configuration MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'pascal'
-app.config['MYSQL_PASSWORD'] = 'Root@1234'
-app.config['MYSQL_DB'] = 'blog_db'
+app.config['MYSQL_HOST'] = 'caboose.proxy.rlwy.net'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'mtoXdIqPyUqWBVuVKiWLKNFfPHhcODBN'
+app.config['MYSQL_DB'] = 'railway'
+app.config['MYSQL_PORT'] = 40186
 
 # Configuration JWT
 app.config['JWT_SECRET_KEY'] = 'inf222-blog-secret-key'
