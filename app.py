@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import hashlib
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -13,7 +14,7 @@ app.config['MYSQL_DB'] = 'blog_db'
 
 # Configuration JWT
 app.config['JWT_SECRET_KEY'] = 'inf222-blog-secret-key'
-
+CORS(app)
 mysql = MySQL(app)
 jwt = JWTManager(app)
 
